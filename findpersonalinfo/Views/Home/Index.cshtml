@@ -1,0 +1,69 @@
+﻿@model findpersonalinfo.Models.Search
+@{
+    ViewBag.Title = "Welcome";
+
+}
+
+
+
+@*@using (Html.BeginForm("Details", "FoundInformation", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))*@
+@*<div id="detailsSection">
+        @using (Ajax.BeginForm("Details", "FoundInformation", new AjaxOptions { HttpMethod = "post", InsertionMode = InsertionMode.InsertAfter, UpdateTargetId = "detailsSection" }))
+        {
+            @Html.AntiForgeryToken()
+            <h2>Search:</h2>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                <div class="col-md-12">
+                    @Html.TextBoxFor(m => m.SearchTerm, new { @class = "col-md-12 form-control", PlaceHolder = "Email or Username" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-default" value="Search" />
+                </div>
+            </div>
+        }
+    </div>*@
+<h2>Search:</h2>
+<form method="post" id="detailsForm" class="form-group">
+    <div class="col-md-12">
+
+        @Html.TextBoxFor(m => m.SearchTerm, new { @class = "col-md-12 form-control", PlaceHolder = "Email or Username", id = "searchTerm" })
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Search" />
+        </div>
+    </div>
+    <div id="detailsSection">
+    </div>
+
+    <img src="~/Controllers/Images/progress.gif" id="progress" style="display:none" />
+
+</form>
+@section Scripts {
+    <script>
+        $('#detailsForm').submit(function () {
+            $('#detailsSection').hide();
+            $('#progress').fadeIn();
+            $.post('FoundInformation/Details/', {
+                searchTerm: $('#searchTerm').val()
+            })
+                .done(function (res) {
+                    setTimeout(function () {
+                        $('#detailsSection').html(res);
+                        $('#progress').hide();
+
+                        $('#detailsSection').show();
+                    }, 2000);
+                });
+            return false;
+        });
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+    @*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+}
